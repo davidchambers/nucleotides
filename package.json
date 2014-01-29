@@ -1,0 +1,25 @@
+{
+  "name": "nucleotides",
+  "version": "0.1.0",
+  "description": "The building blocks of JavaScript programs",
+  "author": "David Chambers <dc@davidchambers.me>",
+  "keywords": [
+    "functional",
+    "util"
+  ],
+  "main": "./nucleotides",
+  "homepage": "https://github.com/davidchambers/nucleotides",
+  "bugs": "https://github.com/davidchambers/nucleotides/issues",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/davidchambers/nucleotides.git"
+  },
+  "dependencies": {
+    "underscore": "1.6.x"
+  },
+  "devDependencies": {
+    "eslint": "0.6.x",
+    "mocha": "1.20.x",
+    "xyz": "0.4.x"
+  }
+}

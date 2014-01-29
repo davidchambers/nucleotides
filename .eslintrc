@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "eqeqeq": [0],
+    // make tab width > max len to disallow tab characters
+    "max-len": [2, 79, 80],
+    "no-new-func": [0],
+    "no-new-wrappers": [0],
+    "quotes": [2, "single", "avoid-escape"]
+  }
+}

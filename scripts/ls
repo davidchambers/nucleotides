@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var _ = require('underscore');
+
+var nucleotides = require('.');
+
+
+function propertyAccessor(s) {
+  return /^[$_A-Za-z][$_A-Za-z0-9]*$/.test(s) ? '.' + s : "['" + s + "']";
+}
+
+function walk(val, path, paths) {
+  if (_.isFunction(val)) {
+    return paths.concat(path.map(propertyAccessor).join(''));
+  } else {
+    return _.map(val, function(val, key) {
+      return walk(val, path.concat(key), paths);
+    });
+  }
+}
+
+console.log(
+  _.chain(walk(nucleotides, [], []))
+  .flatten()
+  .map(function(s) { return '- nucleotides' + s; })
+  .value()
+  .join('\n')
+);
