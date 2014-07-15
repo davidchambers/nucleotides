@@ -285,6 +285,15 @@ suite('nucleotides.array', function() {
     assert.deepEqual(nucleotides.array.filter([-1, 0, 1], Boolean), [-1, 1]);
   });
 
+  test('concat', function() {
+    assert.deepEqual(nucleotides.array.concat([1], [2], 3), [1, 2, 3]);
+    assert.deepEqual(nucleotides.array.concat([1], [2, [3]]), [1, 2, [3]]);
+    assert.deepEqual(nucleotides.array.concat(['foo'], null), ['foo', null]);
+    assert.deepEqual(nucleotides.array.concat(null, ['bar']), [null, 'bar']);
+    assert.deepEqual(nucleotides.array.concat('foo', 'bar'), ['foo', 'bar']);
+    assert.deepEqual(nucleotides.array.concat(), []);
+  });
+
 });
 
 
@@ -305,6 +314,20 @@ suite('nucleotides.date', function() {
     e = new Date(2010, 10, 13);
     assert.strictEqual(nucleotides.date['setDate!'](d, 13), e.valueOf());
     assert.strictEqual(d.valueOf(), e.valueOf());
+  });
+
+});
+
+
+suite('nucleotides.string', function() {
+
+  test('concat', function() {
+    assert.strictEqual(nucleotides.string.concat('foo', 'bar'), 'foobar');
+    assert.strictEqual(nucleotides.string.concat('foo', null), 'foonull');
+    assert.strictEqual(nucleotides.string.concat(null, 'bar'), 'nullbar');
+    assert.strictEqual(nucleotides.string.concat(1, 2, 3, 4, 5), '12345');
+    assert.strictEqual(nucleotides.string.concat([1, 2, 3], 4, 5), '1,2,345');
+    assert.strictEqual(nucleotides.string.concat(), '');
   });
 
 });
