@@ -74,7 +74,9 @@ void function() {
           // unsuffixed names for future use.
           return [
             isMutator(method) ? method.name + '!' : method.name,
-            _.bind(Function.prototype.call, method)
+            method.name === 'concat' ?
+              _.bind(method, new ctor) :
+              _.bind(Function.prototype.call, method)
           ];
         })
         .object()
