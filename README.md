@@ -1,4 +1,4 @@
-# Nucleotides
+<img alt="Nucleotides" src="https://cdn.rawgit.com/davidchambers/nucleotides/2cbeb86ea12587d61b7d3c6b26b03af72fa84c9c/nucleotides.svg" width="528" height="80" />
 
 Nucleotides are the building blocks of JavaScript programs. They are simple,
 useful functions with well-understood semantics.
