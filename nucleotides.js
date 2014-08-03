@@ -44,6 +44,23 @@ void function() {
                    Object.getOwnPropertyNames(Date.prototype)))
   ));
 
+  var makeN = function(n) {
+    var argNames = R.range(0, n).join(', ').replace(/(?=\b\d)/g, '$');
+    return new Function('method', 'boundArgs', R.join('\n', [
+      'return function(' + argNames + ') {',
+      '  var args = boundArgs.concat(Array.prototype.slice.call(arguments));',
+      '  return method.apply(args[0], args.slice(1));',
+      '};'
+    ]));
+  };
+
+  var wrap = (function(cache) {
+    return function(method, boundArgs) {
+      var n = method.length + 1;
+      return (cache[n] || (cache[n] = makeN(n)))(method, boundArgs);
+    };
+  }({}));
+
   var nucleotides = R.mixin({
     operator: {
       // 11.2.2 The new Operator
@@ -76,8 +93,7 @@ void function() {
           // unsuffixed names for future use.
           return [
             isMutator(method) ? method.name + '!' : method.name,
-            method.name === 'concat' ? method.bind(new ctor)
-                                     : Function.prototype.call.bind(method)
+            wrap(method, method.name === 'concat' ? [new ctor] : [])
           ];
         }),
         R.fromPairs
