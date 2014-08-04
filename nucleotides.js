@@ -3,7 +3,7 @@ void function() {
   'use strict';
 
   var env = typeof module !== 'undefined' ? 'node' : 'browser';
-  var _ = env === 'node' ? require('underscore') : window._;
+  var R = env === 'node' ? require('ramda') : window.ramda;
 
   var operator = {
     unary: [
@@ -32,57 +32,58 @@ void function() {
     Array, Boolean, Date, Function, Number, Object, RegExp, String
   ];
 
-  var getPrototypeProperty = function(ctor, name) {
+  var getPrototypeProperty = R.curry(function(ctor, name) {
     return ctor.prototype[name];
-  };
+  });
 
-  var isMutator = _.partial(_.contains, [].concat(
-    _.chain(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'])
-      .map(_.partial(getPrototypeProperty, Array))
-      .value(),
-    _.chain(Object.getOwnPropertyNames(Date.prototype))
-      .filter(RegExp.prototype.test.bind(/^set[A-Z]/))
-      .map(_.partial(getPrototypeProperty, Date))
-      .value()
+  var isMutator = R.rPartial(R.contains, R.concat(
+    R.map(getPrototypeProperty(Array),
+          ['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift']),
+    R.map(getPrototypeProperty(Date),
+          R.filter(RegExp.prototype.test.bind(/^set[A-Z]/),
+                   Object.getOwnPropertyNames(Date.prototype)))
   ));
 
-  var nucleotides = _.extend({
+  var nucleotides = R.mixin({
     operator: {
       // 11.2.2 The new Operator
       new: function(ctor) {
-        return new (_.bind.apply(_, [ctor, null].concat(_.rest(arguments))))();
+        return new (Function.prototype.bind.apply(ctor, arguments))();
       },
-      unary: _.object(operator.unary, _.map(operator.unary, function(op) {
-        return new Function('a', 'return ' + op + ' a');
-      })),
-      binary: _.object(operator.binary, _.map(operator.binary, function(op) {
-        return new Function('a', 'b', 'return a ' + op + ' b');
-      }))
+      unary: R.fromPairs(R.map(function(op) {
+        return [op, new Function('a', 'return ' + op + ' a')];
+      }, operator.unary)),
+      binary: R.fromPairs(R.map(function(op) {
+        return [op, new Function('a', 'b', 'return a ' + op + ' b')];
+      }, operator.binary))
     }
   },
-  _.object(
-    _.invoke(_.pluck(constructors, 'name'), 'toLowerCase'),
-    _.map(constructors, function(ctor) {
-      return _.chain(Object.getOwnPropertyNames(ctor.prototype))
-        .map(_.partial(getPrototypeProperty, ctor))
-        .filter(_.isFunction)
-        .reject(_.partial(_.contains, constructors))
-        .map(function(method) {
+  R.fromPairs(R.map(function(ctor) {
+    return [
+      ctor.name.toLowerCase(),
+      R.pipe(
+        R.prop('prototype'),
+        Object.getOwnPropertyNames,
+        R.map(getPrototypeProperty(ctor)),
+        R.filter(function(x) {
+          return Object.prototype.toString.call(x) === '[object Function]';
+        }),
+        R.reject(R.rPartial(R.contains, constructors)),
+        R.map(function(method) {
           // Suffix the name of each mutator function with "!".
           // This prevents unintentional mutation, draws attention
           // to places where mutation does occur, and reserves the
           // unsuffixed names for future use.
           return [
             isMutator(method) ? method.name + '!' : method.name,
-            method.name === 'concat' ?
-              _.bind(method, new ctor) :
-              _.bind(Function.prototype.call, method)
+            method.name === 'concat' ? method.bind(new ctor)
+                                     : Function.prototype.call.bind(method)
           ];
-        })
-        .object()
-        .value();
-    })
-  ));
+        }),
+        R.fromPairs
+      )(ctor)
+    ];
+  }, constructors)));
 
   if (env === 'node') {
     module.exports = nucleotides;

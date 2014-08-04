@@ -2,7 +2,7 @@
 
 var assert = require('assert');
 
-var _ = require('underscore');
+var R = require('ramda');
 
 var nucleotides = require('..');
 
@@ -23,9 +23,19 @@ var numbers = [
   Infinity
 ];
 
-var values = numbers.concat(_.map(numbers, String));
+var values = numbers.concat(R.map(String, numbers));
 
-var randomInteger = _.partial(_.random, MIN_SAFE_INTEGER, MAX_SAFE_INTEGER);
+var random = function(min, max) {
+  return min + Math.floor(Math.random() * (max - min + 1));
+};
+
+var randomInteger = function() {
+  return random(MIN_SAFE_INTEGER, MAX_SAFE_INTEGER);
+};
+
+var randomValue = function() {
+  return values[random(0, values.length - 1)];
+};
 
 
 suite('nucleotides.operator.new', function() {
@@ -46,33 +56,33 @@ suite('nucleotides.operator.new', function() {
 suite('nucleotides.operator.unary', function() {
 
   test('typeof', function() {
-    _.each(values.concat(Date, NaN, {}, /./, null, undefined), function(x) {
+    R.each(function(x) {
       assert.strictEqual(nucleotides.operator.unary['typeof'](x), typeof x);
-    });
+    }, values.concat(Date, NaN, {}, /./, null, undefined));
   });
 
   test('+', function() {
-    _.each(values, function(x) {
+    R.each(function(x) {
       assert.strictEqual(nucleotides.operator.unary['+'](x), +x);
-    });
+    }, values);
   });
 
   test('-', function() {
-    _.each(values, function(x) {
+    R.each(function(x) {
       assert.strictEqual(nucleotides.operator.unary['-'](x), -x);
-    });
+    }, values);
   });
 
   test('~', function() {
-    _.each(values, function(x) {
+    R.each(function(x) {
       assert.strictEqual(nucleotides.operator.unary['~'](x), ~x);
-    });
+    }, values);
   });
 
   test('!', function() {
-    _.each(numbers, function(x) {
+    R.each(function(x) {
       assert.strictEqual(nucleotides.operator.unary['!'](x), !x);
-    });
+    }, values);
   });
 
 });
@@ -80,16 +90,14 @@ suite('nucleotides.operator.unary', function() {
 
 suite('nucleotides.operator.binary', function() {
 
-  var splatOperands = function(test) {
-    return function(operands) {
-      return test(operands[0], operands[1]);
-    };
-  };
+  var splatOperands = R.curry(function(test, operands) {
+    return test(operands[0], operands[1]);
+  });
 
   var each = function(generator, test) {
-    _.each(_.zip(_.times(100, function() { return generator(); }),
-                 _.times(100, function() { return generator(); })),
-           splatOperands(test));
+    R.each(splatOperands(test),
+           R.zip(R.times(R.nAry(0, generator), 100),
+                 R.times(R.nAry(0, generator), 100)));
   };
 
   test('*', function() {
@@ -141,72 +149,72 @@ suite('nucleotides.operator.binary', function() {
   });
 
   test('<', function() {
-    each(_.partial(_.sample, values), function(a, b) {
+    each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['<'](a, b), a < b);
     });
   });
 
   test('>', function() {
-    each(_.partial(_.sample, values), function(a, b) {
+    each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['>'](a, b), a > b);
     });
   });
 
   test('<=', function() {
-    each(_.partial(_.sample, values), function(a, b) {
+    each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['<='](a, b), a <= b);
     });
   });
 
   test('>=', function() {
-    each(_.partial(_.sample, values), function(a, b) {
+    each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['>='](a, b), a >= b);
     });
   });
 
   test('instanceof', function() {
-    _.each([
+    R.each(splatOperands(function(a, b) {
+      assert.strictEqual(nucleotides.operator.binary['instanceof'](a, b),
+                         a instanceof b);
+    }), [
       [[], Array],
       [42, Number],
       [new Number(42), Number]
-    ], splatOperands(function(a, b) {
-      assert.strictEqual(nucleotides.operator.binary['instanceof'](a, b),
-                         a instanceof b);
-    }));
+    ]);
   });
 
   test('in', function() {
-    _.each([
+    R.each(splatOperands(function(a, b) {
+      assert.strictEqual(nucleotides.operator.binary['in'](a, b), a in b);
+    }), [
       ['', {}],
       ['x', {}],
       ['x', {x: 1}],
       ['x', {y: 1}],
       ['constructor', {}]
-    ], splatOperands(function(a, b) {
-      assert.strictEqual(nucleotides.operator.binary['in'](a, b), a in b);
-    }));
+    ]);
   });
 
   test('==', function() {
-    each(_.partial(_.sample, values), function(a, b) {
+    each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['=='](a, b), a == b);
     });
   });
 
   test('!=', function() {
-    each(_.partial(_.sample, values), function(a, b) {
+    each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['!='](a, b), a != b);
     });
   });
 
   test('===', function() {
-    each(_.partial(_.sample, values), function(a, b) {
+    each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['==='](a, b), a === b);
     });
   });
 
   test('!==', function() {
-    each(_.partial(_.sample, values), function(a, b) {
+    each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['!=='](a, b), a !== b);
     });
   });
@@ -230,13 +238,13 @@ suite('nucleotides.operator.binary', function() {
   });
 
   test('&&', function() {
-    each(_.partial(_.sample, numbers), function(a, b) {
+    each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['&&'](a, b), a && b);
     });
   });
 
   test('||', function() {
-    each(_.partial(_.sample, numbers), function(a, b) {
+    each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['||'](a, b), a || b);
     });
   });
