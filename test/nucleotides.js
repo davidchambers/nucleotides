@@ -56,30 +56,35 @@ suite('nucleotides.operator.new', function() {
 suite('nucleotides.operator.unary', function() {
 
   test('typeof', function() {
+    assert.strictEqual(nucleotides.operator.unary['typeof'].length, 1);
     R.each(function(x) {
       assert.strictEqual(nucleotides.operator.unary['typeof'](x), typeof x);
     }, values.concat(Date, NaN, {}, /./, null, undefined));
   });
 
   test('+', function() {
+    assert.strictEqual(nucleotides.operator.unary['+'].length, 1);
     R.each(function(x) {
       assert.strictEqual(nucleotides.operator.unary['+'](x), +x);
     }, values);
   });
 
   test('-', function() {
+    assert.strictEqual(nucleotides.operator.unary['-'].length, 1);
     R.each(function(x) {
       assert.strictEqual(nucleotides.operator.unary['-'](x), -x);
     }, values);
   });
 
   test('~', function() {
+    assert.strictEqual(nucleotides.operator.unary['~'].length, 1);
     R.each(function(x) {
       assert.strictEqual(nucleotides.operator.unary['~'](x), ~x);
     }, values);
   });
 
   test('!', function() {
+    assert.strictEqual(nucleotides.operator.unary['!'].length, 1);
     R.each(function(x) {
       assert.strictEqual(nucleotides.operator.unary['!'](x), !x);
     }, values);
@@ -101,78 +106,91 @@ suite('nucleotides.operator.binary', function() {
   };
 
   test('*', function() {
+    assert.strictEqual(nucleotides.operator.binary['*'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['*'](a, b), a * b);
     });
   });
 
   test('/', function() {
+    assert.strictEqual(nucleotides.operator.binary['/'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['/'](a, b), a / b);
     });
   });
 
   test('%', function() {
+    assert.strictEqual(nucleotides.operator.binary['%'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['%'](a, b), a % b);
     });
   });
 
   test('+', function() {
+    assert.strictEqual(nucleotides.operator.binary['+'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['+'](a, b), a + b);
     });
   });
 
   test('-', function() {
+    assert.strictEqual(nucleotides.operator.binary['-'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['-'](a, b), a - b);
     });
   });
 
   test('<<', function() {
+    assert.strictEqual(nucleotides.operator.binary['<<'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['<<'](a, b), a << b);
     });
   });
 
   test('>>', function() {
+    assert.strictEqual(nucleotides.operator.binary['>>'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['>>'](a, b), a >> b);
     });
   });
 
   test('>>>', function() {
+    assert.strictEqual(nucleotides.operator.binary['>>>'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['>>>'](a, b), a >>> b);
     });
   });
 
   test('<', function() {
+    assert.strictEqual(nucleotides.operator.binary['<'].length, 2);
     each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['<'](a, b), a < b);
     });
   });
 
   test('>', function() {
+    assert.strictEqual(nucleotides.operator.binary['>'].length, 2);
     each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['>'](a, b), a > b);
     });
   });
 
   test('<=', function() {
+    assert.strictEqual(nucleotides.operator.binary['<='].length, 2);
     each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['<='](a, b), a <= b);
     });
   });
 
   test('>=', function() {
+    assert.strictEqual(nucleotides.operator.binary['>='].length, 2);
     each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['>='](a, b), a >= b);
     });
   });
 
   test('instanceof', function() {
+    assert.strictEqual(nucleotides.operator.binary['instanceof'].length, 2);
     R.each(splatOperands(function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['instanceof'](a, b),
                          a instanceof b);
@@ -184,6 +202,7 @@ suite('nucleotides.operator.binary', function() {
   });
 
   test('in', function() {
+    assert.strictEqual(nucleotides.operator.binary['in'].length, 2);
     R.each(splatOperands(function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['in'](a, b), a in b);
     }), [
@@ -196,54 +215,63 @@ suite('nucleotides.operator.binary', function() {
   });
 
   test('==', function() {
+    assert.strictEqual(nucleotides.operator.binary['=='].length, 2);
     each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['=='](a, b), a == b);
     });
   });
 
   test('!=', function() {
+    assert.strictEqual(nucleotides.operator.binary['!='].length, 2);
     each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['!='](a, b), a != b);
     });
   });
 
   test('===', function() {
+    assert.strictEqual(nucleotides.operator.binary['==='].length, 2);
     each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['==='](a, b), a === b);
     });
   });
 
   test('!==', function() {
+    assert.strictEqual(nucleotides.operator.binary['!=='].length, 2);
     each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['!=='](a, b), a !== b);
     });
   });
 
   test('&', function() {
+    assert.strictEqual(nucleotides.operator.binary['&'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['&'](a, b), a & b);
     });
   });
 
   test('^', function() {
+    assert.strictEqual(nucleotides.operator.binary['^'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['^'](a, b), a ^ b);
     });
   });
 
   test('|', function() {
+    assert.strictEqual(nucleotides.operator.binary['|'].length, 2);
     each(randomInteger, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['|'](a, b), a | b);
     });
   });
 
   test('&&', function() {
+    assert.strictEqual(nucleotides.operator.binary['&&'].length, 2);
     each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['&&'](a, b), a && b);
     });
   });
 
   test('||', function() {
+    assert.strictEqual(nucleotides.operator.binary['||'].length, 2);
     each(randomValue, function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['||'](a, b), a || b);
     });
@@ -253,6 +281,13 @@ suite('nucleotides.operator.binary', function() {
 
 
 suite('nucleotides.array', function() {
+
+  test('arity', function() {
+    R.each(function(name) {
+      assert.strictEqual(nucleotides.array[name].length,
+                         Array.prototype[name.replace(/!$/, '')].length + 1);
+    }, R.keys(nucleotides.array));
+  });
 
   test('mutator methods', function() {
     var a = [1, 2, 3];
@@ -305,7 +340,26 @@ suite('nucleotides.array', function() {
 });
 
 
+suite('nucleotides.boolean', function() {
+
+  test('arity', function() {
+    R.each(function(name) {
+      assert.strictEqual(nucleotides.boolean[name].length,
+                         Boolean.prototype[name].length + 1);
+    }, R.keys(nucleotides.boolean));
+  });
+
+});
+
+
 suite('nucleotides.date', function() {
+
+  test('arity', function() {
+    R.each(function(name) {
+      assert.strictEqual(nucleotides.date[name].length,
+                         Date.prototype[name.replace(/!$/, '')].length + 1);
+    }, R.keys(nucleotides.date));
+  });
 
   test('mutator methods', function() {
     var d = new Date(2010, 10, 12);
@@ -327,7 +381,62 @@ suite('nucleotides.date', function() {
 });
 
 
+suite('nucleotides.function', function() {
+
+  test('arity', function() {
+    R.each(function(name) {
+      assert.strictEqual(nucleotides.function[name].length,
+                         Function.prototype[name].length + 1);
+    }, R.keys(nucleotides.function));
+  });
+
+});
+
+
+suite('nucleotides.number', function() {
+
+  test('arity', function() {
+    R.each(function(name) {
+      assert.strictEqual(nucleotides.number[name].length,
+                         Number.prototype[name].length + 1);
+    }, R.keys(nucleotides.number));
+  });
+
+});
+
+
+suite('nucleotides.object', function() {
+
+  test('arity', function() {
+    R.each(function(name) {
+      assert.strictEqual(nucleotides.object[name].length,
+                         Object.prototype[name].length + 1);
+    }, R.keys(nucleotides.object));
+  });
+
+});
+
+
+suite('nucleotides.regexp', function() {
+
+  test('arity', function() {
+    R.each(function(name) {
+      assert.strictEqual(nucleotides.regexp[name].length,
+                         RegExp.prototype[name].length + 1);
+    }, R.keys(nucleotides.regexp));
+  });
+
+});
+
+
 suite('nucleotides.string', function() {
+
+  test('arity', function() {
+    R.each(function(name) {
+      assert.strictEqual(nucleotides.string[name].length,
+                         String.prototype[name].length + 1);
+    }, R.keys(nucleotides.string));
+  });
 
   test('concat', function() {
     assert.strictEqual(nucleotides.string.concat('foo', 'bar'), 'foobar');
