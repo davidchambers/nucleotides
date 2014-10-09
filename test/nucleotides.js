@@ -57,35 +57,35 @@ suite('nucleotides.operator.unary', function() {
 
   test('typeof', function() {
     assert.strictEqual(nucleotides.operator.unary['typeof'].length, 1);
-    R.each(function(x) {
+    R.forEach(function(x) {
       assert.strictEqual(nucleotides.operator.unary['typeof'](x), typeof x);
     }, values.concat(Date, NaN, {}, /./, null, undefined));
   });
 
   test('+', function() {
     assert.strictEqual(nucleotides.operator.unary['+'].length, 1);
-    R.each(function(x) {
+    R.forEach(function(x) {
       assert.strictEqual(nucleotides.operator.unary['+'](x), +x);
     }, values);
   });
 
   test('-', function() {
     assert.strictEqual(nucleotides.operator.unary['-'].length, 1);
-    R.each(function(x) {
+    R.forEach(function(x) {
       assert.strictEqual(nucleotides.operator.unary['-'](x), -x);
     }, values);
   });
 
   test('~', function() {
     assert.strictEqual(nucleotides.operator.unary['~'].length, 1);
-    R.each(function(x) {
+    R.forEach(function(x) {
       assert.strictEqual(nucleotides.operator.unary['~'](x), ~x);
     }, values);
   });
 
   test('!', function() {
     assert.strictEqual(nucleotides.operator.unary['!'].length, 1);
-    R.each(function(x) {
+    R.forEach(function(x) {
       assert.strictEqual(nucleotides.operator.unary['!'](x), !x);
     }, values);
   });
@@ -100,9 +100,9 @@ suite('nucleotides.operator.binary', function() {
   });
 
   var each = function(generator, test) {
-    R.each(splatOperands(test),
-           R.zip(R.times(R.nAry(0, generator), 100),
-                 R.times(R.nAry(0, generator), 100)));
+    R.forEach(splatOperands(test),
+              R.zip(R.times(R.nAry(0, generator), 100),
+                    R.times(R.nAry(0, generator), 100)));
   };
 
   test('*', function() {
@@ -191,7 +191,7 @@ suite('nucleotides.operator.binary', function() {
 
   test('instanceof', function() {
     assert.strictEqual(nucleotides.operator.binary['instanceof'].length, 2);
-    R.each(splatOperands(function(a, b) {
+    R.forEach(splatOperands(function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['instanceof'](a, b),
                          a instanceof b);
     }), [
@@ -203,7 +203,7 @@ suite('nucleotides.operator.binary', function() {
 
   test('in', function() {
     assert.strictEqual(nucleotides.operator.binary['in'].length, 2);
-    R.each(splatOperands(function(a, b) {
+    R.forEach(splatOperands(function(a, b) {
       assert.strictEqual(nucleotides.operator.binary['in'](a, b), a in b);
     }), [
       ['', {}],
@@ -283,7 +283,7 @@ suite('nucleotides.operator.binary', function() {
 suite('nucleotides.array', function() {
 
   test('arity', function() {
-    R.each(function(name) {
+    R.forEach(function(name) {
       assert.strictEqual(nucleotides.array[name].length,
                          Array.prototype[name.replace(/!$/, '')].length + 1);
     }, R.keys(nucleotides.array));
@@ -343,7 +343,7 @@ suite('nucleotides.array', function() {
 suite('nucleotides.boolean', function() {
 
   test('arity', function() {
-    R.each(function(name) {
+    R.forEach(function(name) {
       assert.strictEqual(nucleotides.boolean[name].length,
                          Boolean.prototype[name].length + 1);
     }, R.keys(nucleotides.boolean));
@@ -355,7 +355,7 @@ suite('nucleotides.boolean', function() {
 suite('nucleotides.date', function() {
 
   test('arity', function() {
-    R.each(function(name) {
+    R.forEach(function(name) {
       assert.strictEqual(nucleotides.date[name].length,
                          Date.prototype[name.replace(/!$/, '')].length + 1);
     }, R.keys(nucleotides.date));
@@ -384,7 +384,7 @@ suite('nucleotides.date', function() {
 suite('nucleotides.function', function() {
 
   test('arity', function() {
-    R.each(function(name) {
+    R.forEach(function(name) {
       assert.strictEqual(nucleotides.function[name].length,
                          Function.prototype[name].length + 1);
     }, R.keys(nucleotides.function));
@@ -396,7 +396,7 @@ suite('nucleotides.function', function() {
 suite('nucleotides.number', function() {
 
   test('arity', function() {
-    R.each(function(name) {
+    R.forEach(function(name) {
       assert.strictEqual(nucleotides.number[name].length,
                          Number.prototype[name].length + 1);
     }, R.keys(nucleotides.number));
@@ -408,7 +408,7 @@ suite('nucleotides.number', function() {
 suite('nucleotides.object', function() {
 
   test('arity', function() {
-    R.each(function(name) {
+    R.forEach(function(name) {
       assert.strictEqual(nucleotides.object[name].length,
                          Object.prototype[name].length + 1);
     }, R.keys(nucleotides.object));
@@ -420,7 +420,7 @@ suite('nucleotides.object', function() {
 suite('nucleotides.regexp', function() {
 
   test('arity', function() {
-    R.each(function(name) {
+    R.forEach(function(name) {
       assert.strictEqual(nucleotides.regexp[name].length,
                          RegExp.prototype[name].length + 1);
     }, R.keys(nucleotides.regexp));
@@ -432,7 +432,7 @@ suite('nucleotides.regexp', function() {
 suite('nucleotides.string', function() {
 
   test('arity', function() {
-    R.each(function(name) {
+    R.forEach(function(name) {
       assert.strictEqual(nucleotides.string[name].length,
                          String.prototype[name].length + 1);
     }, R.keys(nucleotides.string));
