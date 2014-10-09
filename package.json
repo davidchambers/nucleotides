@@ -18,7 +18,7 @@
     "ramda": "0.6.x"
   },
   "devDependencies": {
-    "eslint": "0.7.x",
+    "eslint": "0.8.x",
     "mocha": "1.21.x",
     "xyz": "0.4.x"
   }

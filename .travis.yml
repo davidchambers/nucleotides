@@ -5,4 +5,4 @@ node_js:
 install:
   - make setup
 script:
-  - make test
+  - make test lint
