@@ -82,9 +82,7 @@ void function() {
         R.prop('prototype'),
         Object.getOwnPropertyNames,
         R.map(getPrototypeProperty(ctor)),
-        R.filter(function(x) {
-          return Object.prototype.toString.call(x) === '[object Function]';
-        }),
+        R.filter(R.is(Function)),
         R.reject(R.rPartial(R.contains, constructors)),
         R.map(function(method) {
           // Suffix the name of each mutator function with "!".
