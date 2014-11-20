@@ -3,7 +3,7 @@ void function() {
   'use strict';
 
   var env = typeof module !== 'undefined' ? 'node' : 'browser';
-  var R = env === 'node' ? require('ramda') : window.ramda;
+  var R = env === 'node' ? require('ramda') : window.R;
 
   var operator = {
     unary: [
@@ -61,19 +61,17 @@ void function() {
     };
   }({}));
 
-  var nucleotides = R.mixin({
-    operator: {
-      // 11.2.2 The new Operator
-      new: function(ctor) {
-        return new (Function.prototype.bind.apply(ctor, arguments))();
-      },
-      unary: R.fromPairs(R.map(function(op) {
-        return [op, new Function('a', 'return ' + op + ' a')];
-      }, operator.unary)),
-      binary: R.fromPairs(R.map(function(op) {
-        return [op, new Function('a', 'b', 'return a ' + op + ' b')];
-      }, operator.binary))
-    }
+  var nucleotides = R.assoc('operator', {
+    // 11.2.2 The new Operator
+    new: function(ctor) {
+      return new (Function.prototype.bind.apply(ctor, arguments))();
+    },
+    unary: R.fromPairs(R.map(function(op) {
+      return [op, new Function('a', 'return ' + op + ' a')];
+    }, operator.unary)),
+    binary: R.fromPairs(R.map(function(op) {
+      return [op, new Function('a', 'b', 'return a ' + op + ' b')];
+    }, operator.binary))
   },
   R.fromPairs(R.map(function(ctor) {
     return [
