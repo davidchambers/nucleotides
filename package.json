@@ -20,6 +20,6 @@
   "devDependencies": {
     "eslint": "0.8.x",
     "mocha": "1.21.x",
-    "xyz": "0.5.x"
+    "xyz": "1.0.x"
   }
 }
