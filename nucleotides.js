@@ -32,16 +32,23 @@ void function() {
     Array, Boolean, Date, Function, Number, Object, RegExp, String
   ];
 
+  var functionName = function(f) {
+    return /function *([^(]*)/.exec(String(f))[1];
+  };
+
   var getPrototypeProperty = R.curry(function(ctor, name) {
-    return ctor.prototype[name];
+    return functionName(ctor) === 'Function' && (name === 'arguments' ||
+                                                 name === 'caller') ?
+             [] :
+             [ctor.prototype[name]];
   });
 
   var isMutator = R.rPartial(R.contains, R.concat(
-    R.map(getPrototypeProperty(Array),
-          ['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift']),
-    R.map(getPrototypeProperty(Date),
-          R.filter(RegExp.prototype.test.bind(/^set[A-Z]/),
-                   Object.getOwnPropertyNames(Date.prototype)))
+    R.chain(getPrototypeProperty(Array),
+            ['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift']),
+    R.chain(getPrototypeProperty(Date),
+            R.filter(RegExp.prototype.test.bind(/^set[A-Z]/),
+                     Object.getOwnPropertyNames(Date.prototype)))
   ));
 
   var makeN = function(n) {
@@ -79,7 +86,7 @@ void function() {
       R.pipe(
         R.prop('prototype'),
         Object.getOwnPropertyNames,
-        R.map(getPrototypeProperty(ctor)),
+        R.chain(getPrototypeProperty(ctor)),
         R.filter(R.is(Function)),
         R.reject(R.rPartial(R.contains, constructors)),
         R.map(function(method) {
